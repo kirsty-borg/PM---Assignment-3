@@ -26,8 +26,13 @@ public class Main {
         // GENIUS AT WORK...
         // [CODE IN PROGRESS...]
         // RECOMMENDED STRUCTURE OF YOUR ALGORITHM:
-        // TODO: 1. Declare solution data structure
 
+        // TODO: 1. Declare solution data structure
+        int [] size_lorries = new int[num_trucks];
+
+        for (int i = 0; i < size_lorries.length; i++){
+            size_lorries[i]= limit;
+        }
         // TODO: 2. Exhaustivity: make sure you try every possible option
         while (/* Condition that guarantees the exhaustivity */) {
             if (/* TODO: 3. Dead node condition */) {
