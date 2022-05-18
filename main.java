@@ -27,22 +27,32 @@ public class Main {
         // [CODE IN PROGRESS...]
         // RECOMMENDED STRUCTURE OF YOUR ALGORITHM:
 
-        // TODO: 1. Declare solution data structure
+        // TODO: 1. Declare solution data structure : an array to store remaining space in the trucks
         int [] size_lorries = new int[num_trucks];
-
+        int [] assign_truck = new int[weights.length];
+        int j = 0; // Counter for the lorries
         for (int i = 0; i < size_lorries.length; i++){
             size_lorries[i]= limit;
         }
         // TODO: 2. Exhaustivity: make sure you try every possible option
-        while (/* Condition that guarantees the exhaustivity */) {
-            if (/* TODO: 3. Dead node condition */) {
+        for (int i = 0; i < weights.length; i++) {
 
+            int j ; //Counter of the best bin that can accomodate weight[i]
+            int min = limit + 1, bi = 0;
+
+            for( j = 0; j < num_trucks; j++) {
+
+                if (size_lorries[j] >= weights[i] &&
+                        size_lorries - weights[i] < min) { /* TODO: 3. Dead node condition */
+
+                    bi = j;
+                    min = size_lorries[j] - weights[i];
+                }
             }
-            else if (/* TODO: 4. Live node condition */) {
-
-            }
-            else if (/* TODO: 5. Solution node condition */) {
-
+            if (min == limit + 1 ) { /* TODO: 5. Solution node condition */
+                System.out.println("not enough space for carry this weight");
+            }else{
+                assign_truck[i] = bi;
             }
         }
 
@@ -55,7 +65,7 @@ public class Main {
             }
             for (int i = 0; i < n; i++) {
                 // TODO: 7. Put each item inside the corresponding truck
-                ((ArrayList<Integer>) selectedWeights[/* Truck ID */]).add(weights[i]);
+                ((ArrayList<Integer>) selectedWeights[assign_truck[i]).add(weights[i]);
             }
             for (int i = 0; i < num_trucks; i++) {
                 String line = selectedWeights[i].stream()  // We generate a stream of weights
