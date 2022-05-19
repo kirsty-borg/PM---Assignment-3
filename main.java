@@ -50,7 +50,6 @@ public class Solution {
         System.out.println(Arrays.toString(weights));
 
         if (weights[0] > limit) {
-            // System.out.println("No solution.");
             initialCon = true;
         }
 
@@ -70,10 +69,10 @@ public class Solution {
                     trucks.add(new ArrayList<Integer>());
                     trucks.get(trucks.size() - 1).add(weights[i]);
                     put = true;
-                } else if (trucks.get(currentTruck).stream().mapToInt(Integer::intValue).sum() + weights[i] <= limit/* TODO: 4. Live node condition */) {
+                } else if (trucks.get(currentTruck).stream().mapToInt(Integer::intValue).sum() + weights[i] <= limit/* TODO: 5. Solution node condition ) */) {
                     trucks.get(currentTruck).add(weights[i]);
                     put = true;
-                } else /* TODO: 5. Solution node condition )*/ {
+                } else /* TODO: 4. Live node condition*/ {
                     currentTruck++;
                     if(trucks.size()<currentTruck){
                         trucks.add(new ArrayList<>());
