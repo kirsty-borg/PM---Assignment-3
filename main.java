@@ -1,12 +1,13 @@
-package PM---Assignement-3;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Scanner;
+package Practice3;
+
+import java.lang.reflect.Array;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class Main {
+public class Solution {
     /**
      * Main function
+     *
      * @param args Arguments received from command line
      */
     public static void main(String[] args) {
@@ -14,7 +15,7 @@ public class Main {
         final Scanner scanner = new Scanner(System.in);
         final int n = scanner.nextInt();
         final int[] weights = new int[n];
-        for (int i = 0; i < weights.length; i++){
+        for (int i = 0; i < weights.length; i++) {
             weights[i] = scanner.nextInt();
         }
         scanner.close();
@@ -23,41 +24,65 @@ public class Main {
         final int limit = 20000; // This is the capacity of the truck
         final int num_trucks = 3; // Number of trucks
 
+        //Additional Variables
+        boolean initialCon = false;
+        // int weightBound = limit * num_trucks;
+
+
         // GENIUS AT WORK...
         // [CODE IN PROGRESS...]
         // RECOMMENDED STRUCTURE OF YOUR ALGORITHM:
+        // TODO: 1. Declare solution data structure
 
-        // TODO: 1. Declare solution data structure : an array to store remaining space in the trucks
-        int [] size_lorries = new int[num_trucks];
-        int [] assign_truck = new int[weights.length];
-        int j = 0; // Counter for the lorries
-        for (int i = 0; i < size_lorries.length; i++){
-            size_lorries[i]= limit;
+        ArrayList<ArrayList<Integer>> trucks = new ArrayList<>();
+        trucks.add(new ArrayList<>());
+
+        //Don't know which part it becomes but needed
+        //Sort and then traverse for descending order
+        int temp = 0;
+        Arrays.sort(weights);
+        for (int i = 0; i < weights.length / 2; ++i) {
+            temp = weights[i];
+            weights[i] = weights[weights.length - i - 1];
+            weights[weights.length - i - 1] = temp;
         }
-        // TODO: 2. Exhaustivity: make sure you try every possible option
+
+        System.out.println(Arrays.toString(weights));
+
+        if (weights[0] > limit) {
+            // System.out.println("No solution.");
+            initialCon = true;
+        }
+
         for (int i = 0; i < weights.length; i++) {
 
-            int j ; //Counter of the best bin that can accomodate weight[i]
-            int min = limit + 1, bi = 0;
+            if (initialCon) {
+                break;
+            }
 
-            for( j = 0; j < num_trucks; j++) {
+            boolean put = false; //to see whether we have put the item into a truck or not
+            int currentTruck = 0;
 
-                if (size_lorries[j] >= weights[i] &&
-                        size_lorries - weights[i] < min) { /* TODO: 3. Dead node condition */
-
-                    bi = j;
-                    min = size_lorries[j] - weights[i];
+            // TODO: 2. Exhaustive: make sure you try every possible option
+            while (!put/* Condition that guarantees the exhaustive */) {
+                if ((trucks.get(currentTruck).stream().mapToInt(Integer::intValue).sum() + weights[i]) > limit && currentTruck==(trucks.size()-1)/* TODO: 3. Dead node condition */) {
+                    //Current weight does not fit in current truck -> new truck
+                    trucks.add(new ArrayList<Integer>());
+                    trucks.get(trucks.size() - 1).add(weights[i]);
+                    put = true;
+                } else if (trucks.get(currentTruck).stream().mapToInt(Integer::intValue).sum() + weights[i] <= limit/* TODO: 4. Live node condition */) {
+                    trucks.get(currentTruck).add(weights[i]);
+                    put = true;
+                } else /* TODO: 5. Solution node condition )*/ {
+                    currentTruck++;
+                    if(trucks.size()<currentTruck){
+                        trucks.add(new ArrayList<>());
+                    }
                 }
             }
-            if (min == limit + 1 ) { /* TODO: 5. Solution node condition */
-                System.out.println("not enough space for carry this weight");
-            }else{
-                assign_truck[i] = bi;
-            }
         }
-
-        if (/* TODO: 6. We found a solution */) {
-            // If we found a solution
+        if (/* TODO: 6. We found a solution */trucks.size() <= num_trucks && !initialCon) {
+            /*// If we found a solution
             // selectedWeights[i] will contain the weights of each element in the ith lorry
             final Collection<?>[] selectedWeights = new ArrayList<?>[num_trucks];
             for (int i = 0; i < num_trucks; i++) {
@@ -65,18 +90,32 @@ public class Main {
             }
             for (int i = 0; i < n; i++) {
                 // TODO: 7. Put each item inside the corresponding truck
-                ((ArrayList<Integer>) selectedWeights[assign_truck[i]).add(weights[i]);
+                ((ArrayList<Integer>) selectedWeights[/* Truck ID *//*]).add(weights[i]);
             }
             for (int i = 0; i < num_trucks; i++) {
                 String line = selectedWeights[i].stream()  // We generate a stream of weights
                         .map(Object::toString)  // We turn each weight to a String
                         .collect(Collectors.joining(" "));  // We collect them joining them with a space
                 System.out.println(line);
+            }*/
+            for (int i = 0; i < trucks.size(); i++) {
+                System.out.println("\nTruck " + (i + 1));
+                for (int j = 0; j < trucks.get(i).size(); j++) {
+                    System.out.print("[" + trucks.get(i).get(j) + "]");
+                }
             }
-        }
-        else {
+        } else {
             // If we didn't find a solution
             System.out.println("There is no solution for the given problem :'(");
+            if (!initialCon) {
+                System.out.println("Required number of trucks: " + trucks.size());
+                for (int i = 0; i < trucks.size(); i++) {
+                    System.out.println("\nTruck " + (i + 1));
+                    for (int j = 0; j < trucks.get(i).size(); j++) {
+                        System.out.print("[" + trucks.get(i).get(j) + "]");
+                    }
+                }
+            }
         }
     }
 }
